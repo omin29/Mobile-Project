@@ -87,7 +87,7 @@ public class SaveTaskActivity extends AppCompatActivity {
             }
             catch (Exception e) {
                 Toast.makeText(this, e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
-                Log.d("INSERT_EXCEPTION", e.getLocalizedMessage());
+                //Log.d("INSERT_EXCEPTION", e.getLocalizedMessage());
             }
             finally {
                 if(_db != null) {

@@ -1,41 +1,50 @@
 package com.example.taskmanager.fragments;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Build;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.taskmanager.fragments.placeholder.PlaceholderContent.PlaceholderItem;
-import com.example.taskmanager.databinding.FragmentItemBinding;
+import com.example.taskmanager.R;
+import com.example.taskmanager.databinding.FragmentTodoTaskBinding;
+import com.example.taskmanager.task.Task;
+import com.example.taskmanager.utility.App;
 
+import java.time.LocalDate;
 import java.util.List;
 
-/**
- * {@link RecyclerView.Adapter} that can display a {@link PlaceholderItem}.
- * TODO: Replace the implementation with code for your data type.
- */
 public class MyTaskRecyclerViewAdapter extends RecyclerView.Adapter<MyTaskRecyclerViewAdapter.ViewHolder> {
 
-    private final List<PlaceholderItem> mValues;
+    private final List<Task> mValues;
 
-    public MyTaskRecyclerViewAdapter(List<PlaceholderItem> items) {
+    public MyTaskRecyclerViewAdapter(List<Task> items) {
         mValues = items;
     }
 
+    @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        return new ViewHolder(FragmentItemBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
+        return new ViewHolder(FragmentTodoTaskBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).id);
-        holder.mContentView.setText(mValues.get(position).content);
+        holder.task = mValues.get(position);
+        holder.taskTitle.setText(mValues.get(position).getTitle());
+        LocalDate taskDate = mValues.get(position).getExpiresOn();
+        holder.taskExpiresOn.setText(
+                (taskDate == null)?
+                        App.getContext().getResources().getString(R.string.task_expiry_date_text_view_default)
+                        :
+                        (App.getContext().getResources().getString(R.string.task_expires_on_beginning) +
+                                taskDate.format(App.APP_DATE_FORMATTER)));
     }
 
     @Override
@@ -44,19 +53,20 @@ public class MyTaskRecyclerViewAdapter extends RecyclerView.Adapter<MyTaskRecycl
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public final TextView mIdView;
-        public final TextView mContentView;
-        public PlaceholderItem mItem;
+        public final TextView taskTitle;
+        public final TextView taskExpiresOn;
+        public Task task;
 
-        public ViewHolder(FragmentItemBinding binding) {
+        public ViewHolder(FragmentTodoTaskBinding binding) {
             super(binding.getRoot());
-            mIdView = binding.itemNumber;
-            mContentView = binding.content;
+            taskTitle = binding.todoTaskTitle;
+            taskExpiresOn = binding.todoTaskExpiresOn;
         }
 
+        @NonNull
         @Override
         public String toString() {
-            return super.toString() + " '" + mContentView.getText() + "'";
+            return super.toString() + " '" + taskTitle.getText() + "'";
         }
     }
 }

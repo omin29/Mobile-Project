@@ -1,8 +1,10 @@
 package com.example.taskmanager.fragments;
 
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -13,7 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.taskmanager.R;
-import com.example.taskmanager.fragments.placeholder.PlaceholderContent;
+import com.example.taskmanager.utility.DatabaseHelper;
 
 /**
  * A fragment representing a list of Items.
@@ -51,10 +53,11 @@ public class TaskFragment extends Fragment {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_item_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_todo_task_list, container, false);
 
         // Set the adapter
         if (view instanceof RecyclerView) {
@@ -65,7 +68,9 @@ public class TaskFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new MyTaskRecyclerViewAdapter(PlaceholderContent.ITEMS));
+
+            DatabaseHelper _db = new DatabaseHelper(context);
+            recyclerView.setAdapter(new MyTaskRecyclerViewAdapter(_db.selectTasks()));
         }
         return view;
     }
