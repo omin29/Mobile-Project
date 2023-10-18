@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Task Manager</string>
+    <string name="todo_tab_name">TODO</string>
+    <string name="finished_tab_name">Finished</string>
+    <string name="failed_tab_name">Failed</string>
+    <string name="open_task_creation_button_content_description">Opens task creation screen</string>
+    <string name="save_task_button">Save</string>
+    <string name="task_title_edit_text_hint">Enter task title</string>
+    <string name="task_description_edit_text_hint">Task description</string>
+    <string name="clock_icon_content_description">Sets expiry date on task</string>
+    <string name="task_expiry_date_text_view_default">No expiry date</string>
+    <string name="remove_task_expiry_date_button_content_description">Removes expiry date from task</string>
+    <string name="task_save_success_message">Task saved successfully</string>
+    <string name="task_title_placeholder">Title</string>
+    <string name="task_expires_on_placeholder">Expires on xx-xx-xxxx</string>
+    <string name="task_complete_button_content_description">Marks the task as completed</string>
+    <string name="task_delete_button_content_description">Deletes the task</string>
+</resources>

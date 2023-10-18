@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:divider="@drawable/list_divider"
+    android:orientation="vertical"
+    android:showDividers="end">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/todoTaskTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/text_margin"
+                android:text="@string/task_title_placeholder"
+                android:textAppearance="?attr/textAppearanceListItem" />
+
+            <TextView
+                android:id="@+id/todoTaskExpiresOn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/text_margin"
+                android:text="@string/task_expires_on_placeholder"
+                android:textAppearance="?attr/textAppearanceListItem" />
+        </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/completeTodoTaskButton"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/task_complete_button_content_description"
+            android:scaleX="2.5"
+            android:scaleY="2.5"
+            android:src="@drawable/ic_complete" />
+
+        <ImageButton
+            android:id="@+id/deleteTodoTaskButton"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/task_delete_button_content_description"
+            android:scaleX="2.5"
+            android:scaleY="2.5"
+            android:src="@drawable/ic_delete" />
+
+    </LinearLayout>
+</LinearLayout>
+

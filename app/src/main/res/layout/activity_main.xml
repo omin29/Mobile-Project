@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/mainTabs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/todoTab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/todo_tab_name" />
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/finishedTab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/finished_tab_name" />
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/failedTab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/failed_tab_name" />
+    </com.google.android.material.tabs.TabLayout>
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/viewPager"
+        android:layout_width="409dp"
+        android:layout_height="600dp"
+        android:layout_marginStart="2dp"
+        android:layout_marginTop="2dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mainTabs" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/openTaskCreationButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="20dp"
+        android:clickable="true"
+        android:contentDescription="@string/open_task_creation_button_content_description"
+        android:onClick="openTaskCreationHandler"
+        app:backgroundTint="@color/design_default_color_primary_dark"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/viewPager"
+        app:srcCompat="@drawable/ic_add"
+        app:tint="@android:color/white" />
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SaveTaskActivity">
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <Button
+            android:id="@+id/taskCancelButton"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:layout_weight="1"
+            android:onClick="cancelTaskCreationHandler"
+            android:text="@android:string/cancel"
+            android:textColor="@color/black" />
+
+        <Button
+            android:id="@+id/taskSaveButton"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_weight="1"
+            android:onClick="taskSaveHandler"
+            android:text="@string/save_task_button"
+            android:textColor="@color/black" />
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/taskTitleEditText"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:hint="@string/task_title_edit_text_hint"
+        android:importantForAutofill="no"
+        android:inputType="textMultiLine"
+        android:maxLength="@integer/task_title_limit"
+        android:textColor="@color/black"
+        android:textColorHint="@color/material_dynamic_neutral40"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+
+    <EditText
+        android:id="@+id/taskDescriptionEditText"
+        android:layout_width="match_parent"
+        android:layout_height="360dp"
+        android:layout_marginTop="8dp"
+        android:ems="10"
+        android:gravity="start|top"
+        android:hint="@string/task_description_edit_text_hint"
+        android:importantForAutofill="no"
+        android:inputType="textMultiLine"
+        android:maxLength="@integer/task_description_limit"
+        android:textColor="@color/black"
+        android:textColorHint="@color/material_dynamic_neutral40"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/taskTitleEditText" />
+
+    <TextView
+        android:id="@+id/taskExpiryDateTextView"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_weight="1"
+        android:background="@null"
+        android:drawableStart="@drawable/ic_clock"
+        android:drawablePadding="5dp"
+        android:gravity="center_vertical"
+        android:onClick="setExpiryDateHandler"
+        android:text="@string/task_expiry_date_text_view_default"
+        android:textColor="@color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/taskDescriptionEditText" />
+
+    <ImageButton
+        android:id="@+id/removeTaskExpiryDateButton"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:background="@null"
+        android:contentDescription="@string/remove_task_expiry_date_button_content_description"
+        android:onClick="removeTaskExpiryDateHandler"
+        android:visibility="gone"
+        app:layout_constraintStart_toEndOf="@+id/taskExpiryDateTextView"
+        app:layout_constraintTop_toBottomOf="@+id/taskDescriptionEditText"
+        app:srcCompat="@drawable/ic_close"
+        tools:visibility="visible" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
