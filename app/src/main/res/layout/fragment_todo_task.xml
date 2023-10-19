@@ -35,6 +35,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/text_margin"
+                android:drawableStart="@drawable/ic_clock"
+                android:drawablePadding="5dp"
                 android:text="@string/task_expires_on_placeholder"
                 android:textAppearance="?attr/textAppearanceListItem" />
         </LinearLayout>
