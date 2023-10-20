@@ -49,23 +49,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //Log.d("TASK_TEST", new Task("Water plants").getExpiresOn().toString());
-        /*try {
-            Task t = null;
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                t = new Task(
-                        "Hello",
-                        "Greet people",
-                        LocalDate.now()
-                        //new String(new char[1201]).replace('\0', 'a')
-                );
-            }
-            Log.d("T_TITLE", t.getTitle());
-            t.Validate();
-        }
-        catch (Exception e){
-            Log.d("Validation_Exception", e.getLocalizedMessage());
-        }*/
     }
 
     public void openTaskCreationHandler(View v) {

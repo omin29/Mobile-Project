@@ -10,11 +10,15 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.taskmanager.R;
+import com.example.taskmanager.task.TaskStatus;
+import com.example.taskmanager.utility.App;
 import com.example.taskmanager.utility.DatabaseHelper;
 
 /**
@@ -24,8 +28,10 @@ public class TaskFragment extends Fragment {
 
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
+    private static final String ARG_TASK_FILTER = "task-filter";
     // TODO: Customize parameters
     private int mColumnCount = 1;
+    private TaskStatus mTaskFilter = null;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -34,12 +40,18 @@ public class TaskFragment extends Fragment {
     public TaskFragment() {
     }
 
+    public TaskFragment(TaskStatus taskStatus) {
+        this();
+        this.mTaskFilter = taskStatus;
+    }
+
     // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
-    public static TaskFragment newInstance(int columnCount) {
+    public static TaskFragment newInstance(int columnCount, TaskStatus taskStatus) {
         TaskFragment fragment = new TaskFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_COLUMN_COUNT, columnCount);
+        args.putString(ARG_TASK_FILTER, taskStatus.name());
         fragment.setArguments(args);
         return fragment;
     }
@@ -50,6 +62,7 @@ public class TaskFragment extends Fragment {
 
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
+            mTaskFilter = TaskStatus.valueOf(getArguments().getString(ARG_TASK_FILTER));
         }
     }
 
@@ -69,8 +82,20 @@ public class TaskFragment extends Fragment {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
 
-            DatabaseHelper _db = new DatabaseHelper(context);
-            recyclerView.setAdapter(new MyTaskRecyclerViewAdapter(_db.selectTasks()));
+            try {
+                DatabaseHelper _db = new DatabaseHelper(context);
+
+                if(mTaskFilter != null) {
+                    recyclerView.setAdapter(new MyTaskRecyclerViewAdapter(_db.selectTasks(mTaskFilter)));
+                }
+                else {
+                    recyclerView.setAdapter(new MyTaskRecyclerViewAdapter(_db.selectTasks()));
+                }
+            }
+            catch (Exception e) {
+                Toast.makeText(context, getResources().getString(R.string.tasks_load_failure_message),
+                        Toast.LENGTH_LONG).show();
+            }
         }
         return view;
     }

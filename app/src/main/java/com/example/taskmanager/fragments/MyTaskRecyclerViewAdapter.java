@@ -6,6 +6,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Build;
 import android.view.LayoutInflater;
@@ -19,6 +20,7 @@ import com.example.taskmanager.R;
 import com.example.taskmanager.databinding.FragmentTodoTaskBinding;
 import com.example.taskmanager.task.Task;
 import com.example.taskmanager.utility.App;
+import com.example.taskmanager.utility.DatabaseHelper;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -81,9 +83,29 @@ public class MyTaskRecyclerViewAdapter extends RecyclerView.Adapter<MyTaskRecycl
                                 .getString(R.string.delete_alert_positive),
                         (dialog, which) ->
                         {
-                            Toast.makeText(holder.deleteTodoTaskButton.getContext(),
-                                String.format("You tried to delete \"%s\"", holder.task.getTitle()),
-                                Toast.LENGTH_LONG).show();
+                            DatabaseHelper _db = null;
+                            Context context = holder.deleteTodoTaskButton.getContext();
+
+                            try {
+                                _db = new DatabaseHelper(context);
+                                _db.deleteTask(holder.task);
+                                mValues.remove(holder.task);
+                                notifyDataSetChanged();
+
+                                Toast.makeText(context,
+                                        String.format(App.getContext().getResources()
+                                                .getString(R.string.task_delete_success_message)),
+                                        Toast.LENGTH_LONG).show();
+                            }
+                            catch(Exception e) {
+                                Toast.makeText(context, e.getLocalizedMessage(),Toast.LENGTH_LONG);
+                            }
+                            finally {
+                                if(_db != null) {
+                                    _db.close();
+                                    _db = null;
+                                }
+                            }
                         });
                 builder.setNegativeButton(android.R.string.cancel,
                         (dialog, which) -> dialog.cancel());

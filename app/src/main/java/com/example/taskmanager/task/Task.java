@@ -111,4 +111,11 @@ public class Task implements Validation {
             throw new Exception("The task expiry date should not be before the current date!");
         }
     }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void reevaluateStatus() {
+        if(expiresOn != null && expiresOn.isBefore(LocalDate.now())) {
+            setStatus(TaskStatus.Failed);
+        }
+    }
 }

@@ -19,6 +19,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
     private SQLiteDatabase _db;
@@ -72,10 +73,33 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     getLocalDateTimeFromEpochSeconds(c.getLong(c.getColumnIndex("COMPLETED_ON"))));
             currentTask.setStatus(TaskStatus.getStatus(
                     c.getInt(c.getColumnIndex("STATUS"))));
+            currentTask.reevaluateStatus();//If task has expired while stored in the database
 
             tasks.add(currentTask);
         }
 
+        /*Tasks are ordered by expiry date but we want to show the ones without
+          expiry date at the end of the list. The tasks without expiry date
+          return 0 epoch seconds and this causes them to be in the
+          beginning of the ordered list. This happens because we store
+          the expiry date in integer column in the database.*/
+        while(tasks.get(0).getExpiresOn() == null) {
+            Task taskWithoutExpiryDate = tasks.get(0);
+            tasks.remove(taskWithoutExpiryDate);
+            tasks.add(taskWithoutExpiryDate);
+        }
+
+        /*When first task has expiry date then
+          we have gone through all tasks without one
+          because the list is ordered by expiry date.*/
+
+        return tasks;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public List<Task> selectTasks(TaskStatus statusFilter) {
+        List<Task> tasks = selectTasks();
+        tasks = tasks.stream().filter(t -> t.getStatus().equals(statusFilter)).collect(Collectors.toList());
         return tasks;
     }
 
