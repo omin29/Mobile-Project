@@ -102,7 +102,7 @@ public class TaskFragment extends Fragment {
                     recyclerView.setAdapter(new MyTaskRecyclerViewAdapter(_db.selectTasks(mTaskFilter)));
                 }
                 else {
-                    recyclerView.setAdapter(new MyTaskRecyclerViewAdapter(_db.selectTasks()));
+                    recyclerView.setAdapter(new MyTaskRecyclerViewAdapter(_db.selectTasks(null)));
                 }
 
                 if(recyclerView.getAdapter() != null) {

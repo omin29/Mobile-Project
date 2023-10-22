@@ -114,8 +114,13 @@ public class Task implements Validation {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void reevaluateStatus() {
-        if(expiresOn != null && expiresOn.isBefore(LocalDate.now())) {
-            setStatus(TaskStatus.Failed);
+        if(expiresOn != null && !getStatus().equals(TaskStatus.Finished)) {
+            if(expiresOn.isBefore(LocalDate.now())) {
+                setStatus(TaskStatus.Failed);
+            }
+            else {
+                setStatus(TaskStatus.TODO);
+            }
         }
     }
 }
