@@ -17,9 +17,12 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.taskmanager.R;
+import com.example.taskmanager.task.Task;
 import com.example.taskmanager.task.TaskStatus;
 import com.example.taskmanager.utility.App;
 import com.example.taskmanager.utility.DatabaseHelper;
+
+import java.util.List;
 
 /**
  * A fragment representing a list of Items.
@@ -32,6 +35,8 @@ public class TaskFragment extends Fragment {
     // TODO: Customize parameters
     private int mColumnCount = 1;
     private TaskStatus mTaskFilter = null;
+
+    private MyTaskRecyclerViewAdapter adapter = null;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -54,6 +59,13 @@ public class TaskFragment extends Fragment {
         args.putString(ARG_TASK_FILTER, taskStatus.name());
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    @Override
+    public void onResume() {
+        super.onResume();
+        refreshTabList();
     }
 
     @Override
@@ -82,8 +94,9 @@ public class TaskFragment extends Fragment {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
 
+            DatabaseHelper _db = null;
             try {
-                DatabaseHelper _db = new DatabaseHelper(context);
+                _db = new DatabaseHelper(context);
 
                 if(mTaskFilter != null) {
                     recyclerView.setAdapter(new MyTaskRecyclerViewAdapter(_db.selectTasks(mTaskFilter)));
@@ -91,12 +104,45 @@ public class TaskFragment extends Fragment {
                 else {
                     recyclerView.setAdapter(new MyTaskRecyclerViewAdapter(_db.selectTasks()));
                 }
+
+                if(recyclerView.getAdapter() != null) {
+                    adapter = (MyTaskRecyclerViewAdapter)recyclerView.getAdapter();
+                }
             }
             catch (Exception e) {
                 Toast.makeText(context, getResources().getString(R.string.tasks_load_failure_message),
                         Toast.LENGTH_LONG).show();
             }
+            finally {
+                if(_db != null){
+                    _db.close();
+                    _db = null;
+                }
+            }
         }
         return view;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void refreshTabList() {
+        if (adapter != null) {
+            DatabaseHelper _db = null;
+            try {
+                _db = new DatabaseHelper(getContext());
+                List<Task> tasks = adapter.getmValues();
+                List<Task> currentTasks = _db.selectTasks(mTaskFilter);
+                tasks.clear();
+                tasks.addAll(currentTasks);
+                adapter.notifyDataSetChanged();
+            } catch (Exception e) {
+                Toast.makeText(getContext(), getResources().getString(R.string.tasks_load_failure_message),
+                        Toast.LENGTH_LONG).show();
+            } finally {
+                if (_db != null) {
+                    _db.close();
+                    _db = null;
+                }
+            }
+        }
     }
 }

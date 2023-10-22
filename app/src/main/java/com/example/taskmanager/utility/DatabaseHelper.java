@@ -24,15 +24,14 @@ import java.util.stream.Collectors;
 public class DatabaseHelper extends SQLiteOpenHelper {
     private SQLiteDatabase _db;
     public static final String DB_NAME = "TASK_MANAGER.db";
-    public static final int DB_VERSION = 1;
+    public static final int DB_VERSION = 2;
     public static final String DB_CREATE = "" +
             "CREATE TABLE TASK(" +
             "ID INTEGER PRIMARY KEY AUTOINCREMENT," +
             "TITLE TEXT NOT NULL," +
             "DESCRIPTION TEXT," +
             "EXPIRES_ON INTEGER," +
-            "COMPLETED_ON INTEGER " +
-            "   CHECK(COMPLETED_ON IS NULL OR COMPLETED_ON <= unixepoch('now'))," +
+            "COMPLETED_ON INTEGER, " +
             "STATUS INTEGER NOT NULL " +
             "   CHECK(STATUS >= 0 AND STATUS <= 2)" +
             ");";
@@ -78,20 +77,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             tasks.add(currentTask);
         }
 
+        if(tasks.size() > 1) {
         /*Tasks are ordered by expiry date but we want to show the ones without
           expiry date at the end of the list. The tasks without expiry date
           return 0 epoch seconds and this causes them to be in the
           beginning of the ordered list. This happens because we store
           the expiry date in integer column in the database.*/
-        while(tasks.get(0).getExpiresOn() == null) {
-            Task taskWithoutExpiryDate = tasks.get(0);
-            tasks.remove(taskWithoutExpiryDate);
-            tasks.add(taskWithoutExpiryDate);
-        }
+            while (tasks.get(0).getExpiresOn() == null) {
+                Task taskWithoutExpiryDate = tasks.get(0);
+                tasks.remove(taskWithoutExpiryDate);
+                tasks.add(taskWithoutExpiryDate);
+            }
 
         /*When first task has expiry date then
           we have gone through all tasks without one
           because the list is ordered by expiry date.*/
+        }
 
         return tasks;
     }

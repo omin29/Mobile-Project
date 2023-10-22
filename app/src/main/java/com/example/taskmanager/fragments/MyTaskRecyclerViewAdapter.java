@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Build;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,18 +20,23 @@ import android.widget.Toast;
 import com.example.taskmanager.R;
 import com.example.taskmanager.databinding.FragmentTodoTaskBinding;
 import com.example.taskmanager.task.Task;
+import com.example.taskmanager.task.TaskStatus;
 import com.example.taskmanager.utility.App;
 import com.example.taskmanager.utility.DatabaseHelper;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class MyTaskRecyclerViewAdapter extends RecyclerView.Adapter<MyTaskRecyclerViewAdapter.ViewHolder> {
-
     private final List<Task> mValues;
 
     public MyTaskRecyclerViewAdapter(List<Task> items) {
         mValues = items;
+    }
+
+    public List<Task> getmValues() {
+        return mValues;
     }
 
     @NonNull
@@ -63,9 +69,34 @@ public class MyTaskRecyclerViewAdapter extends RecyclerView.Adapter<MyTaskRecycl
         holder.completeTodoTaskButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(holder.completeTodoTaskButton.getContext(),
+                DatabaseHelper _db = null;
+                Context context = holder.completeTodoTaskButton.getContext();
+
+                try {
+                    holder.task.setStatus(TaskStatus.Finished);
+                    holder.task.setCompletedOn(LocalDateTime.now());
+                    _db = new DatabaseHelper(context);
+                    _db.updateTask(holder.task);
+                    mValues.remove(holder.task);
+                    notifyDataSetChanged();
+
+                    Toast.makeText(context,
+                            App.getContext().getResources().getString(R.string.task_complete_success_message),
+                            Toast.LENGTH_LONG).show();
+                }
+                catch (Exception e) {
+                    Toast.makeText(context, e.getLocalizedMessage(),Toast.LENGTH_LONG).show();
+                }
+                finally {
+                    if(_db != null) {
+                        _db.close();
+                        _db = null;
+                    }
+                }
+
+                /*Toast.makeText(holder.completeTodoTaskButton.getContext(),
                         String.format("You tried to complete \"%s\"", holder.task.getTitle()),
-                        Toast.LENGTH_LONG).show();
+                        Toast.LENGTH_LONG).show();*/
             }
         });
 
