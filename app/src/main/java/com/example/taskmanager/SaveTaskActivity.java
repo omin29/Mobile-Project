@@ -28,7 +28,10 @@ public class SaveTaskActivity extends AppCompatActivity {
     protected ImageButton removeTaskExpiryDateButton;
     protected Task currentTask;
     protected DatabaseHelper _db;
+    public static final String ARG_CALLER_TAB_INDEX = "caller-tab-index";
+    protected int callerTabIndex = 0;
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,10 +41,7 @@ public class SaveTaskActivity extends AppCompatActivity {
         taskExpiryDateTextView = findViewById(R.id.taskExpiryDateTextView);
         removeTaskExpiryDateButton = findViewById(R.id.removeTaskExpiryDateButton);
 
-        if(!taskExpiryDateTextView.getText().toString()
-                .equals(getResources().getString(R.string.task_expiry_date_text_view_default))){
-            removeTaskExpiryDateButton.setVisibility(View.VISIBLE);
-        }
+        loadPotentialTaskData();
     }
 
     public void cancelTaskCreationHandler(View v) {
@@ -112,6 +112,34 @@ public class SaveTaskActivity extends AppCompatActivity {
 
     private void goToMainActivity() {
         Intent i = new Intent(this, MainActivity.class);
+        i.putExtra(ARG_CALLER_TAB_INDEX, callerTabIndex);
         startActivity(i);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void loadPotentialTaskData() {
+        Bundle taskData = getIntent().getExtras();
+        if(taskData != null) {
+            currentTask = new Task();
+            currentTask.setDataFromBundle(taskData);
+
+            if(currentTask.getTitle() != null) {
+                taskTitleEditText.setText(currentTask.getTitle());
+            }
+
+            if(currentTask.getDescription() != null) {
+                taskDescriptionEditText.setText(currentTask.getDescription());
+            }
+
+            if(currentTask.getExpiresOn() != null) {
+                taskExpiryDateTextView.setText(
+                        currentTask.getExpiresOn().format(App.APP_DATE_FORMATTER));
+                removeTaskExpiryDateButton.setVisibility(View.VISIBLE);
+            }
+
+            if(currentTask.getStatus() != null) {
+                callerTabIndex = currentTask.getStatus().getValue();
+            }
+        }
     }
 }

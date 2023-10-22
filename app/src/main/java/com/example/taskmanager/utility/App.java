@@ -18,6 +18,7 @@ public class App extends Application {
     //Using weak reference to avoid potential memory leaks
     private static WeakReference<Context> mContext;
     public final static DateTimeFormatter APP_DATE_FORMATTER = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+    public final static DateTimeFormatter APP_DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("dd-MM-yyyy H:mm");
 
     @Override
     public void onCreate() {

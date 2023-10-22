@@ -1,5 +1,7 @@
 package com.example.taskmanager.fragments;
 
+import static androidx.core.content.ContextCompat.startActivity;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
@@ -8,7 +10,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Build;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.taskmanager.R;
+import com.example.taskmanager.SaveTaskActivity;
 import com.example.taskmanager.databinding.FragmentTodoTaskBinding;
 import com.example.taskmanager.task.Task;
 import com.example.taskmanager.task.TaskStatus;
@@ -149,9 +154,11 @@ public class MyTaskRecyclerViewAdapter extends RecyclerView.Adapter<MyTaskRecycl
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(holder.itemView.getContext(),
-                        String.format("You tried to open \"%s\"", holder.task.getTitle()),
-                        Toast.LENGTH_LONG).show();
+                Context context = holder.itemView.getContext();
+                Intent i = new Intent(context, SaveTaskActivity.class);
+                Bundle taskData = holder.task.getBundleData();
+                i.putExtras(taskData);
+                startActivity(context, i, null);
             }
         });
     }

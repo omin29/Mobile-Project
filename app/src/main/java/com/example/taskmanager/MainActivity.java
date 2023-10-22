@@ -49,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        tabs.selectTab(tabs.getTabAt(getIntent().getIntExtra(SaveTaskActivity.ARG_CALLER_TAB_INDEX, 0)));
     }
 
     public void openTaskCreationHandler(View v) {
