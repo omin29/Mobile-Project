@@ -123,7 +123,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         else if(statusFilter.equals(TaskStatus.Failed)) {
             selectQuery = "SELECT * FROM 'TASK' " +
-                    "WHERE STATUS = 2 OR EXPIRES_ON < unixepoch('now', 'start of day') ORDER BY EXPIRES_ON";
+                    "WHERE STATUS = 2 OR (EXPIRES_ON < unixepoch('now', 'start of day') AND STATUS = 0) ORDER BY EXPIRES_ON";
         }
         else {
             selectQuery = "SELECT * FROM TASK ORDER BY EXPIRES_ON";
@@ -238,7 +238,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private  void updateStatusForExpiredTasks(){
         String updateStatusQuery = "UPDATE 'TASK' " +
                 "SET STATUS = 2 " +
-                "WHERE EXPIRES_ON < unixepoch('now', 'start of day')";
+                "WHERE EXPIRES_ON < unixepoch('now', 'start of day') AND " +
+                "STATUS = 0";
         _db.execSQL(updateStatusQuery);
     }
 }

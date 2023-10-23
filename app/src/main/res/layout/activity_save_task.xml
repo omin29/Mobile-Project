@@ -7,7 +7,7 @@
     tools:context=".SaveTaskActivity">
 
     <LinearLayout
-        android:id="@+id/linearLayout"
+        android:id="@+id/saveTaskLinearLayoutTop"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
@@ -16,6 +16,13 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
+
+        <include
+            android:id="@+id/saveTaskBackButtonLayout"
+            layout="@layout/back_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
 
         <Button
             android:id="@+id/taskCancelButton"
@@ -26,7 +33,8 @@
             android:layout_weight="1"
             android:onClick="cancelTaskCreationHandler"
             android:text="@android:string/cancel"
-            android:textColor="@color/black" />
+            android:textColor="@color/black"
+            tools:visibility="visible" />
 
         <Button
             android:id="@+id/taskSaveButton"
@@ -37,7 +45,8 @@
             android:layout_weight="1"
             android:onClick="taskSaveHandler"
             android:text="@string/save_task_button"
-            android:textColor="@color/black" />
+            android:textColor="@color/black"
+            tools:visibility="visible" />
     </LinearLayout>
 
     <EditText
@@ -54,7 +63,7 @@
         android:textColorHint="@color/material_dynamic_neutral40"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+        app:layout_constraintTop_toBottomOf="@+id/saveTaskLinearLayoutTop" />
 
     <EditText
         android:id="@+id/taskDescriptionEditText"
@@ -75,7 +84,7 @@
 
     <TextView
         android:id="@+id/taskExpiryDateTextView"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="50dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
@@ -88,7 +97,26 @@
         android:text="@string/task_expiry_date_text_view_default"
         android:textColor="@color/black"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/taskDescriptionEditText" />
+        app:layout_constraintTop_toBottomOf="@+id/taskDescriptionEditText"
+        tools:visibility="visible" />
+
+    <TextView
+        android:id="@+id/taskCompletedOnTextView"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_weight="1"
+        android:background="@null"
+        android:drawableStart="@drawable/ic_check_green"
+        android:drawablePadding="5dp"
+        android:gravity="center_vertical"
+        android:text="@string/task_completed_on_text_view_beginning"
+        android:textColor="@color/material_dynamic_neutral40"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/taskDescriptionEditText"
+        tools:visibility="gone" />
 
     <ImageButton
         android:id="@+id/removeTaskExpiryDateButton"

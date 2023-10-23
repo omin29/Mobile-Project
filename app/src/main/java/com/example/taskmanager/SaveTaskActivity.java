@@ -8,8 +8,8 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.taskmanager.task.Task;
+import com.example.taskmanager.task.TaskStatus;
 import com.example.taskmanager.utility.App;
 import com.example.taskmanager.utility.DatabaseHelper;
 
@@ -24,7 +25,7 @@ import java.time.LocalDate;
 
 public class SaveTaskActivity extends AppCompatActivity {
     protected EditText taskTitleEditText, taskDescriptionEditText;
-    protected TextView taskExpiryDateTextView;
+    protected TextView taskExpiryDateTextView, taskCompletedOnTextView;
     protected ImageButton removeTaskExpiryDateButton;
     protected Task currentTask;
     protected DatabaseHelper _db;
@@ -40,6 +41,7 @@ public class SaveTaskActivity extends AppCompatActivity {
         taskDescriptionEditText = findViewById(R.id.taskDescriptionEditText);
         taskExpiryDateTextView = findViewById(R.id.taskExpiryDateTextView);
         removeTaskExpiryDateButton = findViewById(R.id.removeTaskExpiryDateButton);
+        taskCompletedOnTextView = findViewById(R.id.taskCompletedOnTextView);
 
         loadPotentialTaskData();
     }
@@ -139,7 +141,41 @@ public class SaveTaskActivity extends AppCompatActivity {
 
             if(currentTask.getStatus() != null) {
                 callerTabIndex = currentTask.getStatus().getValue();
+
+                if(currentTask.getStatus().equals(TaskStatus.Finished)) {
+                    showFinishedTaskData();
+                }
             }
         }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void showFinishedTaskData() {
+        //Rearranges top part of the screen
+        ViewGroup.MarginLayoutParams marginParams = (ViewGroup.MarginLayoutParams)findViewById(R.id.saveTaskLinearLayoutTop)
+                .getLayoutParams();
+        marginParams.leftMargin = 0;
+        findViewById(R.id.saveTaskBackButtonLayout).setVisibility(View.VISIBLE);
+        findViewById(R.id.goBackImageButton).setOnClickListener((view)-> onBackPressed());
+        findViewById(R.id.taskCancelButton).setVisibility(View.GONE);
+        findViewById(R.id.taskSaveButton).setVisibility(View.GONE);
+
+        //Disables and recolors inputs. Hides unrelated views.
+        taskTitleEditText.setEnabled(false);
+        taskTitleEditText.setTextColor(
+                getResources().getColor(
+                        com.google.android.material.R.color.material_dynamic_neutral40, getTheme()));
+        taskDescriptionEditText.setEnabled(false);
+        taskDescriptionEditText.setTextColor(
+                getResources().getColor(
+                        com.google.android.material.R.color.material_dynamic_neutral40, getTheme()));
+        taskExpiryDateTextView.setVisibility(View.GONE);
+        removeTaskExpiryDateButton.setVisibility(View.GONE);
+
+        //Shows completion date and time
+        taskCompletedOnTextView.setVisibility(View.VISIBLE);
+        String completedOn = getResources().getString(R.string.task_completed_on_text_view_beginning) +
+                currentTask.getCompletedOn().format(App.APP_DATE_TIME_FORMATTER);
+        taskCompletedOnTextView.setText(completedOn);
     }
 }
