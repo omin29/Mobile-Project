@@ -5,10 +5,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.os.Build;
 
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 
 import com.example.taskmanager.task.Task;
 import com.example.taskmanager.task.TaskStatus;
@@ -19,7 +17,6 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
     private SQLiteDatabase _db;
@@ -105,7 +102,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 //        return tasks;
 //    }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     @SuppressLint("Range")
     public List<Task> selectTasks(@Nullable TaskStatus statusFilter) {
         String selectQuery = "";
@@ -150,7 +146,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return tasks;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     public void insertTask(Task task) {
         String insertQuery = "INSERT INTO TASK(" +
                 "TITLE, DESCRIPTION, EXPIRES_ON, STATUS) " +
@@ -164,7 +159,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         });
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     public void updateTask(Task task) {
         String updateQuery = "UPDATE TASK SET " +
                 "TITLE = ?, DESCRIPTION = ?, EXPIRES_ON = ?, " +
@@ -185,7 +179,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         _db.execSQL(deleteQuery, new Object[]{task.getId()});
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     @Nullable
     private Long getDateEpochSeconds(@Nullable LocalDate date) {
         if(date == null) {
@@ -198,7 +191,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return epoch;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     @Nullable
     private LocalDate getLocalDateFromEpochSeconds(@Nullable Long epochSeconds) {
         if(epochSeconds == null || epochSeconds == 0) {
@@ -210,7 +202,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return date;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     @Nullable
     private Long getDateTimeEpochSeconds(@Nullable LocalDateTime dateTime) {
         if(dateTime == null) {
@@ -223,7 +214,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return epoch;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     @Nullable
     private LocalDateTime getLocalDateTimeFromEpochSeconds(@Nullable Long epochSeconds) {
         if(epochSeconds == null || epochSeconds == 0) {

@@ -1,12 +1,10 @@
 package com.example.taskmanager;
 
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,7 +30,6 @@ public class SaveTaskActivity extends AppCompatActivity {
     public static final String ARG_CALLER_TAB_INDEX = "caller-tab-index";
     protected int callerTabIndex = 0;
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,18 +48,24 @@ public class SaveTaskActivity extends AppCompatActivity {
     }
 
     public void setExpiryDateHandler(View v) {
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            DatePickerDialog dialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
-                @Override
-                public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
-                    LocalDate newDate = LocalDate.of(year, month, dayOfMonth);
-                    taskExpiryDateTextView.setText(newDate.format(App.APP_DATE_FORMATTER));
-                    removeTaskExpiryDateButton.setVisibility(View.VISIBLE);
-                }
-            }, LocalDate.now().getYear(), LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth());
+        DatePickerDialog dialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
+                LocalDate newDate = LocalDate.of(year, month, dayOfMonth);
 
-            dialog.show();
-        }
+                if(newDate.isBefore(LocalDate.now())) {
+                    Toast.makeText(App.getContext(),
+                            getResources().getString(R.string.incorrectly_set_task_expiry_date_message),
+                            Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                taskExpiryDateTextView.setText(newDate.format(App.APP_DATE_FORMATTER));
+                removeTaskExpiryDateButton.setVisibility(View.VISIBLE);
+            }
+        }, LocalDate.now().getYear(), LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth());
+
+        dialog.show();
     }
 
     public void removeTaskExpiryDateHandler(View v) {
@@ -70,9 +73,9 @@ public class SaveTaskActivity extends AppCompatActivity {
         removeTaskExpiryDateButton.setVisibility(View.GONE);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     public void taskSaveHandler(View v) {
-        if(currentTask == null) {
+        //Insert
+        /*if(currentTask == null) {
             try {
                 currentTask = new Task(
                         taskTitleEditText.getText().toString(),
@@ -98,10 +101,53 @@ public class SaveTaskActivity extends AppCompatActivity {
                 }
                 currentTask = null;
             }
+        }*/
+
+        try {
+            if(currentTask == null) {
+                currentTask = new Task(
+                        taskTitleEditText.getText().toString(),
+                        taskDescriptionEditText.getText().toString(),
+                        getLocalDateFromFormattedText(taskExpiryDateTextView.getText().toString())
+                );
+            }
+            else {
+                currentTask.setTitle(taskTitleEditText.getText().toString());
+                currentTask.setDescription(taskDescriptionEditText.getText().toString());
+                currentTask.setExpiresOn(getLocalDateFromFormattedText(taskExpiryDateTextView.getText().toString()));
+                currentTask.reevaluateStatus();
+            }
+
+            currentTask.validate();
+            _db = new DatabaseHelper(this);
+
+            if(currentTask.getId() == 0) {
+                _db.insertTask(currentTask);
+            }
+            else {
+                _db.updateTask(currentTask);
+            }
+
+            Toast.makeText(this,
+                    getResources().getString(R.string.task_save_success_message),
+                    Toast.LENGTH_LONG).show();
+            goToMainActivity();
+        }
+        catch (Exception e) {
+            Toast.makeText(this, e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+        }
+        finally {
+            if(_db != null) {
+                _db.close();
+                _db = null;
+            }
+
+            if(currentTask != null && currentTask.getId() == 0) {
+                currentTask = null;
+            }
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     @Nullable
     private LocalDate getLocalDateFromFormattedText(String formattedText) {
         if(formattedText.equals(getResources().getString(R.string.task_expiry_date_text_view_default))) {
@@ -118,7 +164,6 @@ public class SaveTaskActivity extends AppCompatActivity {
         startActivity(i);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     private void loadPotentialTaskData() {
         Bundle taskData = getIntent().getExtras();
         if(taskData != null) {
@@ -149,7 +194,6 @@ public class SaveTaskActivity extends AppCompatActivity {
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     private void showFinishedTaskData() {
         //Rearranges top part of the screen
         ViewGroup.MarginLayoutParams marginParams = (ViewGroup.MarginLayoutParams)findViewById(R.id.saveTaskLinearLayoutTop)

@@ -32,9 +32,7 @@ public class Task implements Validation {
     }
     public Task(String title) {
         setTitle(title);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            expiresOn = LocalDate.now();
-        }
+        expiresOn = LocalDate.now();
     }
 
     public Task(String title, String description) {
@@ -95,14 +93,14 @@ public class Task implements Validation {
         this.status = status;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void validate() throws Exception {
         int titleLimit = App.getContext().getResources().getInteger(R.integer.task_title_limit);
         int descriptionLimit = App.getContext().getResources().getInteger(R.integer.task_description_limit);
 
         if(title == null || title.length() == 0) {
-            throw new Exception("The task must have a title!");
+            throw new Exception(App.getContext().getResources()
+                    .getString(R.string.missing_task_title_message));
         }
 
         if(title.length() > titleLimit) {
@@ -115,12 +113,13 @@ public class Task implements Validation {
                     descriptionLimit + " characters.");
         }
 
-        if(expiresOn != null && expiresOn.isBefore(LocalDate.now())) {
-            throw new Exception("The task expiry date should not be before the current date!");
+        if(expiresOn != null && getStatus() != null &&
+                getStatus().equals(TaskStatus.TODO) && expiresOn.isBefore(LocalDate.now())) {
+            throw new Exception(App.getContext().getResources()
+                    .getString(R.string.incorrectly_set_task_expiry_date_message));
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     public void reevaluateStatus() {
         if(expiresOn != null && !getStatus().equals(TaskStatus.Finished)) {
             if(expiresOn.isBefore(LocalDate.now())) {
@@ -132,7 +131,6 @@ public class Task implements Validation {
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     public Bundle getBundleData() {
         Bundle taskData = new Bundle();
         taskData.putInt(ARG_TASK_ID, getId());
@@ -151,7 +149,6 @@ public class Task implements Validation {
         return  taskData;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     @SuppressWarnings("ConstantConditions")
     public void setDataFromBundle(Bundle taskData) {
         setId(taskData.getInt(ARG_TASK_ID));

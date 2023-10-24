@@ -1,10 +1,10 @@
 package com.example.taskmanager.fragments;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 
-import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -24,15 +24,12 @@ import com.example.taskmanager.utility.DatabaseHelper;
 
 import java.util.List;
 
-/**
- * A fragment representing a list of Items.
- */
+
+@SuppressLint("NotifyDataSetChanged")
 public class TaskFragment extends Fragment {
 
-    // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
     private static final String ARG_TASK_FILTER = "task-filter";
-    // TODO: Customize parameters
     private int mColumnCount = 1;
     private TaskStatus mTaskFilter = null;
 
@@ -50,7 +47,6 @@ public class TaskFragment extends Fragment {
         this.mTaskFilter = taskStatus;
     }
 
-    // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
     public static TaskFragment newInstance(int columnCount, TaskStatus taskStatus) {
         TaskFragment fragment = new TaskFragment();
@@ -61,7 +57,6 @@ public class TaskFragment extends Fragment {
         return fragment;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onResume() {
         super.onResume();
@@ -78,7 +73,6 @@ public class TaskFragment extends Fragment {
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -97,13 +91,7 @@ public class TaskFragment extends Fragment {
             DatabaseHelper _db = null;
             try {
                 _db = new DatabaseHelper(context);
-
-                if(mTaskFilter != null) {
-                    recyclerView.setAdapter(new MyTaskRecyclerViewAdapter(_db.selectTasks(mTaskFilter)));
-                }
-                else {
-                    recyclerView.setAdapter(new MyTaskRecyclerViewAdapter(_db.selectTasks(null)));
-                }
+                recyclerView.setAdapter(new MyTaskRecyclerViewAdapter(_db, mTaskFilter));
 
                 if(recyclerView.getAdapter() != null) {
                     adapter = (MyTaskRecyclerViewAdapter)recyclerView.getAdapter();
@@ -123,7 +111,6 @@ public class TaskFragment extends Fragment {
         return view;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     private void refreshTabList() {
         if (adapter != null) {
             DatabaseHelper _db = null;

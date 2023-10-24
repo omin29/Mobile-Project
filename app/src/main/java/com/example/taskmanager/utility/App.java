@@ -2,9 +2,6 @@ package com.example.taskmanager.utility;
 
 import android.app.Application;
 import android.content.Context;
-import android.os.Build;
-
-import androidx.annotation.RequiresApi;
 
 import java.lang.ref.WeakReference;
 import java.time.format.DateTimeFormatter;
@@ -12,7 +9,6 @@ import java.time.format.DateTimeFormatter;
 /**
  * Utility class which allows access to the application context from anywhere.
  */
-@RequiresApi(api = Build.VERSION_CODES.O)
 public class App extends Application {
 
     //Using weak reference to avoid potential memory leaks

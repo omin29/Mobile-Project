@@ -3,17 +3,15 @@ package com.example.taskmanager.fragments;
 import static androidx.core.content.ContextCompat.startActivity;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,11 +31,14 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@SuppressLint("NotifyDataSetChanged")
 public class MyTaskRecyclerViewAdapter extends RecyclerView.Adapter<MyTaskRecyclerViewAdapter.ViewHolder> {
     private final List<Task> mValues;
+    private TaskStatus taskListType;
 
-    public MyTaskRecyclerViewAdapter(List<Task> items) {
-        mValues = items;
+    public MyTaskRecyclerViewAdapter(@NonNull DatabaseHelper _db, @NonNull TaskStatus taskListType) throws Exception {
+        mValues = _db.selectTasks(taskListType);
+        this.taskListType = taskListType;
     }
 
     public List<Task> getmValues() {
@@ -52,7 +53,6 @@ public class MyTaskRecyclerViewAdapter extends RecyclerView.Adapter<MyTaskRecycl
 
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.task = mValues.get(position);
@@ -66,9 +66,17 @@ public class MyTaskRecyclerViewAdapter extends RecyclerView.Adapter<MyTaskRecycl
             holder.taskExpiresOn.setCompoundDrawables(null, null, null, null);
         }
         else {
-            holder.taskExpiresOn.setCompoundDrawablesWithIntrinsicBounds(
-                    AppCompatResources.getDrawable(holder.taskExpiresOn.getContext(), R.drawable.ic_clock),
-                    null, null, null);
+            if(taskListType.equals(TaskStatus.TODO)) {
+                holder.taskExpiresOn.setCompoundDrawablesWithIntrinsicBounds(
+                        AppCompatResources.getDrawable(holder.taskExpiresOn.getContext(), R.drawable.ic_clock),
+                        null, null, null);
+            }
+            else if(taskListType.equals(TaskStatus.Failed)) {
+                holder.taskExpiresOn.setCompoundDrawablesWithIntrinsicBounds(
+                        AppCompatResources
+                                .getDrawable(holder.taskExpiresOn.getContext(), R.drawable.ic_clock_red),
+                        null, null, null);
+            }
         }
 
         holder.completeTodoTaskButton.setOnClickListener(new View.OnClickListener() {
@@ -98,10 +106,6 @@ public class MyTaskRecyclerViewAdapter extends RecyclerView.Adapter<MyTaskRecycl
                         _db = null;
                     }
                 }
-
-                /*Toast.makeText(holder.completeTodoTaskButton.getContext(),
-                        String.format("You tried to complete \"%s\"", holder.task.getTitle()),
-                        Toast.LENGTH_LONG).show();*/
             }
         });
 
@@ -134,7 +138,7 @@ public class MyTaskRecyclerViewAdapter extends RecyclerView.Adapter<MyTaskRecycl
                                         Toast.LENGTH_LONG).show();
                             }
                             catch(Exception e) {
-                                Toast.makeText(context, e.getLocalizedMessage(),Toast.LENGTH_LONG);
+                                Toast.makeText(context, e.getLocalizedMessage(),Toast.LENGTH_LONG).show();
                             }
                             finally {
                                 if(_db != null) {

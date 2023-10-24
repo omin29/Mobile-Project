@@ -7,9 +7,11 @@
     <string name="go_back_image_button_content_description">Returns back to task lists</string>
     <string name="save_task_button">Save</string>
     <string name="task_title_edit_text_hint">Enter task title</string>
+    <string name="missing_task_title_message">The task must have a title!</string>
     <string name="task_description_edit_text_hint">Task description</string>
     <string name="clock_icon_content_description">Sets expiry date on task</string>
     <string name="task_expiry_date_text_view_default">No expiry date</string>
+    <string name="incorrectly_set_task_expiry_date_message">The task expiry date should not be set before the current date!</string>
     <string name="task_completed_on_text_view_beginning">Completed at&#160;</string>
     <string name="remove_task_expiry_date_button_content_description">Removes expiry date from task</string>
     <string name="task_save_success_message">Task saved successfully</string>
