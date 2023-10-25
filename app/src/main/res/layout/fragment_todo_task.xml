@@ -15,7 +15,7 @@
 
         <LinearLayout
             android:id="@+id/linearLayout2"
-            android:layout_width="wrap_content"
+            android:layout_width="260dp"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -23,7 +23,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView
-                android:id="@+id/todoTaskTitle"
+                android:id="@+id/taskTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/text_margin"
@@ -31,7 +31,7 @@
                 android:textAppearance="?attr/textAppearanceListItem" />
 
             <TextView
-                android:id="@+id/todoTaskExpiresOn"
+                android:id="@+id/taskExpiresOn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/text_margin"
@@ -39,10 +39,26 @@
                 android:drawablePadding="5dp"
                 android:text="@string/task_expires_on_placeholder"
                 android:textAppearance="?attr/textAppearanceListItem" />
+
+
+            <TextView
+                android:id="@+id/finishedTaskCompletedOn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/text_margin"
+                android:background="@null"
+                android:drawableStart="@drawable/ic_check_green"
+                android:drawablePadding="5dp"
+                android:gravity="center_vertical"
+                android:text="@string/task_completed_on_text_view_beginning"
+                android:textColor="@color/material_dynamic_neutral40"
+                android:visibility="gone"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/taskDescriptionEditText" />
         </LinearLayout>
 
         <ImageButton
-            android:id="@+id/completeTodoTaskButton"
+            android:id="@+id/completeTaskButton"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginEnd="48dp"
@@ -53,11 +69,27 @@
             android:scaleY="2.5"
             android:src="@drawable/ic_complete"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/deleteTodoTaskButton"
+            app:layout_constraintEnd_toStartOf="@+id/deleteTaskButton"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageButton
-            android:id="@+id/deleteTodoTaskButton"
+            android:id="@+id/undoTaskCompletionButton"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="48dp"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/task_complete_button_content_description"
+            android:scaleX="2.5"
+            android:scaleY="2.5"
+            android:src="@drawable/ic_filled_clock_orange"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/deleteTaskButton"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:id="@+id/deleteTaskButton"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginEnd="32dp"

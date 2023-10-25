@@ -51,7 +51,10 @@ public class SaveTaskActivity extends AppCompatActivity {
         DatePickerDialog dialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
-                LocalDate newDate = LocalDate.of(year, month, dayOfMonth);
+                /*Adding 1 to the month value because the date picker dialog will
+                  return values between 0 and 11 when we need to provide a value
+                  between 1 and 12 to create LocalDate instance.*/
+                LocalDate newDate = LocalDate.of(year, month + 1, dayOfMonth);
 
                 if(newDate.isBefore(LocalDate.now())) {
                     Toast.makeText(App.getContext(),
@@ -63,7 +66,8 @@ public class SaveTaskActivity extends AppCompatActivity {
                 taskExpiryDateTextView.setText(newDate.format(App.APP_DATE_FORMATTER));
                 removeTaskExpiryDateButton.setVisibility(View.VISIBLE);
             }
-        }, LocalDate.now().getYear(), LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth());
+        }, LocalDate.now().getYear(), LocalDate.now().getMonthValue() - 1, LocalDate.now().getDayOfMonth());
+        //We subtract 1 from month value above because the date dialog works with values between 0 and 11.
 
         dialog.show();
     }

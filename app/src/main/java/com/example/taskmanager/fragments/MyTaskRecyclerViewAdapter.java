@@ -3,7 +3,6 @@ package com.example.taskmanager.fragments;
 import static androidx.core.content.ContextCompat.startActivity;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.recyclerview.widget.RecyclerView;
@@ -62,7 +61,15 @@ public class MyTaskRecyclerViewAdapter extends RecyclerView.Adapter<MyTaskRecycl
                 (taskDate == null)?
                         App.getContext().getResources().getString(R.string.task_expiry_date_text_view_default):taskDate.format(App.APP_DATE_FORMATTER));
 
-        if(taskDate == null) {
+        if(taskListType.equals(TaskStatus.Finished)) {
+            holder.taskExpiresOn.setVisibility(View.GONE);
+            holder.taskCompletedOn.setVisibility(View.VISIBLE);
+            String completedOn = App.getContext().getResources()
+                    .getString(R.string.task_completed_on_text_view_beginning) +
+                    holder.task.getCompletedOn().format(App.APP_DATE_TIME_FORMATTER);
+            holder.taskCompletedOn.setText(completedOn);
+        }
+        else if(taskDate == null) {
             holder.taskExpiresOn.setCompoundDrawables(null, null, null, null);
         }
         else {
@@ -79,41 +86,75 @@ public class MyTaskRecyclerViewAdapter extends RecyclerView.Adapter<MyTaskRecycl
             }
         }
 
-        holder.completeTodoTaskButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                DatabaseHelper _db = null;
-                Context context = holder.completeTodoTaskButton.getContext();
+        if(taskListType.equals(TaskStatus.Finished)) {
+            holder.completeTaskButton.setVisibility(View.GONE);
+            holder.undoTaskCompletionButton.setVisibility(View.VISIBLE);
+            holder.undoTaskCompletionButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    DatabaseHelper _db = null;
+                    Context context = holder.undoTaskCompletionButton.getContext();
 
-                try {
-                    holder.task.setStatus(TaskStatus.Finished);
-                    holder.task.setCompletedOn(LocalDateTime.now());
-                    _db = new DatabaseHelper(context);
-                    _db.updateTask(holder.task);
-                    mValues.remove(holder.task);
-                    notifyDataSetChanged();
+                    try {
+                        holder.task.setStatus(TaskStatus.TODO);
+                        holder.task.reevaluateStatus();
+                        _db = new DatabaseHelper(context);
+                        _db.updateTask(holder.task);
+                        mValues.remove(holder.task);
+                        notifyDataSetChanged();
 
-                    Toast.makeText(context,
-                            App.getContext().getResources().getString(R.string.task_complete_success_message),
-                            Toast.LENGTH_LONG).show();
-                }
-                catch (Exception e) {
-                    Toast.makeText(context, e.getLocalizedMessage(),Toast.LENGTH_LONG).show();
-                }
-                finally {
-                    if(_db != null) {
-                        _db.close();
-                        _db = null;
+                        Toast.makeText(context,
+                                App.getContext().getResources().getString(R.string.task_undo_completion_success_message),
+                                Toast.LENGTH_LONG).show();
+
+                    }
+                    catch (Exception e) {
+                        Toast.makeText(context, e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+                    }
+                    finally {
+                        if (_db != null) {
+                            _db.close();
+                            _db = null;
+                        }
                     }
                 }
-            }
-        });
+            });
+        }
+        else {
+            holder.completeTaskButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    DatabaseHelper _db = null;
+                    Context context = holder.completeTaskButton.getContext();
 
-        holder.deleteTodoTaskButton.setOnClickListener(new View.OnClickListener() {
+                    try {
+                        holder.task.setStatus(TaskStatus.Finished);
+                        holder.task.setCompletedOn(LocalDateTime.now());
+                        _db = new DatabaseHelper(context);
+                        _db.updateTask(holder.task);
+                        mValues.remove(holder.task);
+                        notifyDataSetChanged();
+
+                        Toast.makeText(context,
+                                App.getContext().getResources().getString(R.string.task_complete_success_message),
+                                Toast.LENGTH_LONG).show();
+                    } catch (Exception e) {
+                        Toast.makeText(context, e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+                    } finally {
+                        if (_db != null) {
+                            _db.close();
+                            _db = null;
+                        }
+                    }
+                }
+            });
+        }
+
+        holder.deleteTaskButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(
-                        holder.deleteTodoTaskButton.getContext());
+                        holder.deleteTaskButton.getContext());
                 builder.setCancelable(true);
                 builder.setTitle(App.getContext().getResources()
                         .getString(R.string.task_delete_confirmation_title));
@@ -124,7 +165,7 @@ public class MyTaskRecyclerViewAdapter extends RecyclerView.Adapter<MyTaskRecycl
                         (dialog, which) ->
                         {
                             DatabaseHelper _db = null;
-                            Context context = holder.deleteTodoTaskButton.getContext();
+                            Context context = holder.deleteTaskButton.getContext();
 
                             try {
                                 _db = new DatabaseHelper(context);
@@ -175,17 +216,21 @@ public class MyTaskRecyclerViewAdapter extends RecyclerView.Adapter<MyTaskRecycl
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final TextView taskTitle;
         public final TextView taskExpiresOn;
+        public final TextView taskCompletedOn;
 
-        public final ImageButton completeTodoTaskButton;
-        public final ImageButton deleteTodoTaskButton;
+        public final ImageButton completeTaskButton;
+        public final ImageButton undoTaskCompletionButton;
+        public final ImageButton deleteTaskButton;
         public Task task;
 
         public ViewHolder(FragmentTodoTaskBinding binding) {
             super(binding.getRoot());
-            taskTitle = binding.todoTaskTitle;
-            taskExpiresOn = binding.todoTaskExpiresOn;
-            completeTodoTaskButton = binding.completeTodoTaskButton;
-            deleteTodoTaskButton = binding.deleteTodoTaskButton;
+            taskTitle = binding.taskTitle;
+            taskExpiresOn = binding.taskExpiresOn;
+            taskCompletedOn = binding.finishedTaskCompletedOn;
+            completeTaskButton = binding.completeTaskButton;
+            undoTaskCompletionButton = binding.undoTaskCompletionButton;
+            deleteTaskButton = binding.deleteTaskButton;
         }
 
         @NonNull

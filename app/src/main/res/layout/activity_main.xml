@@ -43,19 +43,30 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/mainTabs" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/openTaskCreationButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="20dp"
-        android:clickable="true"
-        android:contentDescription="@string/open_task_creation_button_content_description"
-        android:onClick="openTaskCreationHandler"
-        app:backgroundTint="@color/design_default_color_primary_dark"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@color/material_dynamic_primary90"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/viewPager"
-        app:srcCompat="@drawable/ic_add"
-        app:tint="@android:color/white" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/viewPager">
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/openTaskCreationButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="10dp"
+            android:clickable="true"
+            android:contentDescription="@string/open_task_creation_button_content_description"
+            android:onClick="openTaskCreationHandler"
+            app:backgroundTint="@color/design_default_color_primary_dark"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_add"
+            app:tint="@android:color/white" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

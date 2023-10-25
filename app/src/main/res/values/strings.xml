@@ -18,11 +18,13 @@
     <string name="task_title_placeholder">Title</string>
     <string name="task_expires_on_placeholder">xx-xx-xxxx</string>
     <string name="task_complete_button_content_description">Marks the task as completed</string>
+    <string name="task_undo_completion_button_content_description">Marks the task as incomplete</string>
     <string name="task_delete_button_content_description">Deletes the task</string>
     <string name="task_delete_confirmation_title">Confirm delete</string>
     <string name="task_delete_confirmation_message">"Are you sure you want to delete this task?"</string>
     <string name="task_delete_success_message">Task deleted</string>
     <string name="task_complete_success_message">Task completed</string>
+    <string name="task_undo_completion_success_message">Task marked as incomplete</string>
     <string name="delete_alert_positive">Confirm</string>
     <string name="tasks_load_failure_message">Failed to load tasks</string>
 

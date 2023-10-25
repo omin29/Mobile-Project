@@ -115,7 +115,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     "SELECT * from 'TASK' WHERE STATUS = 0 AND EXPIRES_ON IS NULL";
         }
         else if(statusFilter.equals(TaskStatus.Finished)) {
-            selectQuery = "SELECT * FROM 'TASK' WHERE STATUS = 1 ORDER BY COMPLETED_ON";
+            selectQuery = "SELECT * FROM 'TASK' WHERE STATUS = 1 ORDER BY COMPLETED_ON DESC";
         }
         else if(statusFilter.equals(TaskStatus.Failed)) {
             selectQuery = "SELECT * FROM 'TASK' " +
