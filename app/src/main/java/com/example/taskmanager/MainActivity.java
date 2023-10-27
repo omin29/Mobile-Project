@@ -56,4 +56,9 @@ public class MainActivity extends AppCompatActivity {
         Intent i = new Intent(this, SaveTaskActivity.class);
         startActivity(i);
     }
+
+    public void openQuotesHandler(View v) {
+        Intent i = new Intent(this, QuotesActivity.class);
+        startActivity(i);
+    }
 }

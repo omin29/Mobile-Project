@@ -4,6 +4,7 @@
     <string name="finished_tab_name">Finished</string>
     <string name="failed_tab_name">Failed</string>
     <string name="open_task_creation_button_content_description">Opens task creation screen</string>
+    <string name="open_quotes_button_content_description">Opens the inspirational quotes screen</string>
     <string name="go_back_image_button_content_description">Returns back to task lists</string>
     <string name="save_task_button">Save</string>
     <string name="task_title_edit_text_hint">Enter task title</string>
@@ -27,5 +28,9 @@
     <string name="task_undo_completion_success_message">Task marked as incomplete</string>
     <string name="delete_alert_positive">Confirm</string>
     <string name="tasks_load_failure_message">Failed to load tasks</string>
+    <string name="zenquotes_credits">Inspirational quotes provided by</string>
+    <string name="zenquotes_placeholder">ZenQuotes API</string>
+    <string name="zenquotes_link"><![CDATA[<a href="https://zenquotes.io/" target="_blank">ZenQuotes API</a>]]></string>
+    <string name="zenquotes_url">https://zenquotes.io</string>
 
 </resources>
