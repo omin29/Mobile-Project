@@ -21,10 +21,16 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         tabs = findViewById(R.id.mainTabs);
         viewPager = findViewById(R.id.viewPager);
+        //This adapter is needed to load the correct fragment.
         viewPagerAdapter = new ViewPagerAdapter(this);
         viewPager.setAdapter(viewPagerAdapter);
 
         tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            /**
+             * Tells the view pager to load the corresponding fragment when
+             * the tab is changed.
+             * @param tab The tab that was selected
+             */
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
@@ -45,18 +51,31 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
-                tabs.getTabAt(position).select();
+                //Makes sure the selected page corresponds to its tab
+                TabLayout.Tab tab = tabs.getTabAt(position);
+                if(tab != null) {
+                    tab.select();
+                }
             }
         });
 
+        //Selects a specific tab if one was chosen for the creation of the activity
         tabs.selectTab(tabs.getTabAt(getIntent().getIntExtra(SaveTaskActivity.ARG_CALLER_TAB_INDEX, 0)));
     }
 
-    public void openTaskCreationHandler(View v) {
+    /**
+     * Starts the activity which is responsible for task creation and editing.
+     * @param v The clicked view
+     */
+    public void openSaveTaskHandler(View v) {
         Intent i = new Intent(this, SaveTaskActivity.class);
         startActivity(i);
     }
 
+    /**
+     * Start the activity which provides inspirational quotes to the user.
+     * @param v The clicked view
+     */
     public void openQuotesHandler(View v) {
         Intent i = new Intent(this, QuotesActivity.class);
         startActivity(i);

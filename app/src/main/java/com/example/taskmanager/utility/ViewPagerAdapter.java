@@ -8,6 +8,10 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import com.example.taskmanager.fragments.TaskFragment;
 import com.example.taskmanager.task.TaskStatus;
 
+/**
+ * Adapter which is responsible for showing the correct fragment in
+ * the app's view pager.
+ */
 public class ViewPagerAdapter extends FragmentStateAdapter {
     public ViewPagerAdapter(@NonNull FragmentActivity fragmentActivity) {
         super(fragmentActivity);
@@ -28,6 +32,8 @@ public class ViewPagerAdapter extends FragmentStateAdapter {
         }
     }
 
+    /*Note that the item count must match the number of returnable fragments for correct behavior.
+      It should also match your tab count.*/
     @Override
     public int getItemCount() {
         return 3;

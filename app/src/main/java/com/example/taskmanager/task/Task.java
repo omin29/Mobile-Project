@@ -1,9 +1,6 @@
 package com.example.taskmanager.task;
 
-import android.os.Build;
 import android.os.Bundle;
-
-import androidx.annotation.RequiresApi;
 
 import com.example.taskmanager.R;
 import com.example.taskmanager.interfaces.Validation;
@@ -12,6 +9,9 @@ import com.example.taskmanager.utility.App;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+/**
+ * A class which represents task data and has utilities for working with said data.
+ */
 public class Task implements Validation {
     private int id = 0;
     private String title = "";
@@ -93,6 +93,10 @@ public class Task implements Validation {
         this.status = status;
     }
 
+    /**
+     * Validates the current data of the task.
+     * @throws Exception Exception due to failed validation which must be caught at higher level
+     */
     @Override
     public void validate() throws Exception {
         int titleLimit = App.getContext().getResources().getInteger(R.integer.task_title_limit);
@@ -120,6 +124,10 @@ public class Task implements Validation {
         }
     }
 
+    /**
+     * Determines whether the incomplete task is expired or not and
+     * updates the reevaluated status.
+     */
     public void reevaluateStatus() {
         if(expiresOn != null && !getStatus().equals(TaskStatus.Finished)) {
             if(expiresOn.isBefore(LocalDate.now())) {
@@ -131,6 +139,11 @@ public class Task implements Validation {
         }
     }
 
+    /**
+     * Bundles the data of the current task in order to make it passable to
+     * an intent.
+     * @return A bundle with all the task data
+     */
     public Bundle getBundleData() {
         Bundle taskData = new Bundle();
         taskData.putInt(ARG_TASK_ID, getId());
@@ -149,6 +162,10 @@ public class Task implements Validation {
         return  taskData;
     }
 
+    /**
+     * Updates the data of the current task using existing data from a bundle.
+     * @param taskData A bundle containing task data
+     */
     @SuppressWarnings("ConstantConditions")
     public void setDataFromBundle(Bundle taskData) {
         setId(taskData.getInt(ARG_TASK_ID));

@@ -61,7 +61,7 @@
             android:layout_marginBottom="10dp"
             android:clickable="true"
             android:contentDescription="@string/open_task_creation_button_content_description"
-            android:onClick="openTaskCreationHandler"
+            android:onClick="openSaveTaskHandler"
             app:backgroundTint="@color/design_default_color_primary_dark"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

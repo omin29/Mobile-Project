@@ -13,7 +13,15 @@ public class App extends Application {
 
     //Using weak reference to avoid potential memory leaks
     private static WeakReference<Context> mContext;
+
+    /**
+     * The formatter used throughout the whole application for date formatting.
+     */
     public final static DateTimeFormatter APP_DATE_FORMATTER = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+
+    /**
+     * The formatter used throughout the whole application for date and time formatting.
+     */
     public final static DateTimeFormatter APP_DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("dd-MM-yyyy H:mm");
 
     @Override
