@@ -8,6 +8,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializer;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.OkHttpClient;
@@ -17,7 +18,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.GET;
 
 public interface QuoteAPI {
-    public static List<Quote> quotes = null;
+    public static List<Quote> quotes = new ArrayList<>();
     public static GsonConverterFactory getGsonConverterFactory(){
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(Quote.class, new QuoteJsonDeserializer());
@@ -34,6 +35,10 @@ public interface QuoteAPI {
                 .build();
     }
 
+    /**
+     * Requests 50 random quotes.
+     * @return A list of 50 random quotes
+     */
     @GET("/api/quotes")
     public Call<List<Quote>> getQuotes();
 }

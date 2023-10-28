@@ -13,7 +13,7 @@
     <string name="clock_icon_content_description">Sets expiry date on task</string>
     <string name="task_expiry_date_text_view_default">No expiry date</string>
     <string name="incorrectly_set_task_expiry_date_message">The task expiry date should not be set before the current date!</string>
-    <string name="task_completed_on_text_view_beginning">Completed at&#160;</string>
+    <string name="task_completed_on_text_view_beginning">Finished at&#160;</string>
     <string name="remove_task_expiry_date_button_content_description">Removes expiry date from task</string>
     <string name="task_save_success_message">Task saved successfully</string>
     <string name="task_title_placeholder">Title</string>
@@ -32,5 +32,8 @@
     <string name="zenquotes_placeholder">ZenQuotes API</string>
     <string name="zenquotes_link"><![CDATA[<a href="https://zenquotes.io/" target="_blank">ZenQuotes API</a>]]></string>
     <string name="zenquotes_url">https://zenquotes.io</string>
-
+    <string name="api_exception_message">There was a problem while fetching a quote. Please try again later.</string>
+    <string name="quote_text_view_placeholder">I am the inspirational quote</string>
+    <string name="get_quote_button">Inspire me</string>
+    <string name="get_quote_button_content_description">Gets inspirational quote for the user</string>
 </resources>
