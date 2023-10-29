@@ -68,6 +68,7 @@ public class QuotesActivity extends AppCompatActivity {
 
                     if(response.body() != null) {
                         QuoteAPI.quotes.addAll((List<Quote>)response.body());
+                        //This is run on the main thread which is allowed to modify the views
                         runOnUiThread(this::showQuote);
                     }
 

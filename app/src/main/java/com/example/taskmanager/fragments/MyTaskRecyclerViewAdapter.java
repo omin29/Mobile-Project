@@ -20,7 +20,7 @@ import android.widget.Toast;
 
 import com.example.taskmanager.R;
 import com.example.taskmanager.SaveTaskActivity;
-import com.example.taskmanager.databinding.FragmentTodoTaskBinding;
+import com.example.taskmanager.databinding.FragmentTaskBinding;
 import com.example.taskmanager.task.Task;
 import com.example.taskmanager.task.TaskStatus;
 import com.example.taskmanager.utility.App;
@@ -53,9 +53,7 @@ public class MyTaskRecyclerViewAdapter extends RecyclerView.Adapter<MyTaskRecycl
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
-        return new ViewHolder(FragmentTodoTaskBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
-
+        return new ViewHolder(FragmentTaskBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
     }
 
     /*This place is very important because here we can modify the
@@ -217,7 +215,7 @@ public class MyTaskRecyclerViewAdapter extends RecyclerView.Adapter<MyTaskRecycl
         public final ImageButton deleteTaskButton;
         public Task task;
 
-        public ViewHolder(FragmentTodoTaskBinding binding) {
+        public ViewHolder(FragmentTaskBinding binding) {
             super(binding.getRoot());
             taskTitle = binding.taskTitle;
             taskExpiresOn = binding.taskExpiresOn;

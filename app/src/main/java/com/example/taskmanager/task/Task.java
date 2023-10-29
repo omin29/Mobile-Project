@@ -129,8 +129,12 @@ public class Task implements Validation {
      * updates the reevaluated status.
      */
     public void reevaluateStatus() {
-        if(expiresOn != null && !getStatus().equals(TaskStatus.Finished)) {
-            if(expiresOn.isBefore(LocalDate.now())) {
+        if(getStatus() == null) {
+            setStatus(TaskStatus.TODO);
+        }
+
+        if(!getStatus().equals(TaskStatus.Finished)) {
+            if(expiresOn != null && expiresOn.isBefore(LocalDate.now())) {
                 setStatus(TaskStatus.Failed);
             }
             else {
