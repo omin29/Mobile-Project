@@ -6,7 +6,6 @@ import com.example.taskmanager.quote.QuoteJsonDeserializer;
 import com.example.taskmanager.utility.App;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonDeserializer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,16 +16,29 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.GET;
 
+/**
+ * An interface which will be used for making calls to the
+ * Zenquotes API using Retrofit.
+ */
 public interface QuoteAPI {
-    public static List<Quote> quotes = new ArrayList<>();
-    public static GsonConverterFactory getGsonConverterFactory(){
+    List<Quote> quotes = new ArrayList<>();
+
+    /**
+     * Builds and returns a custom GSON converter factory for quotes.
+     * @return Custom GSON converter factory for quotes
+     */
+    static GsonConverterFactory getGsonConverterFactory(){
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(Quote.class, new QuoteJsonDeserializer());
         Gson gson = gsonBuilder.create();
         return GsonConverterFactory.create(gson);
     }
 
-    public static Retrofit getRetrofitInstance(){
+    /**
+     * Prepares a Retrofit instance for interaction with the Zenquotes API.
+     * @return Retrofit instance
+     */
+    static Retrofit getRetrofitInstance(){
         OkHttpClient client = new OkHttpClient().newBuilder().build();
         return new Retrofit.Builder()
                 .baseUrl(App.getContext().getResources().getString(R.string.zenquotes_url))
@@ -40,5 +52,5 @@ public interface QuoteAPI {
      * @return A list of 50 random quotes
      */
     @GET("/api/quotes")
-    public Call<List<Quote>> getQuotes();
+    Call<List<Quote>> getQuotes();
 }

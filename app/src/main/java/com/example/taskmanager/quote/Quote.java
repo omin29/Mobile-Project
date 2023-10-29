@@ -1,8 +1,14 @@
 package com.example.taskmanager.quote;
 
+import androidx.annotation.NonNull;
+
+/**
+ * A class which represents quote data.
+ */
+@SuppressWarnings("unused")
 public class Quote {
-    private String quote = "";
-    private String author = "";
+    private String quote;
+    private String author;
     private String preformattedQuoteHTML = "";
 
     public Quote(String quote, String author) {
@@ -39,6 +45,7 @@ public class Quote {
         this.preformattedQuoteHTML = preformattedQuoteHTML;
     }
 
+    @NonNull
     @Override
     public String toString(){
         return String.format("\"%s\" - %s", quote, author);

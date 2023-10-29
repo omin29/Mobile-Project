@@ -8,6 +8,9 @@ import com.google.gson.JsonParseException;
 
 import java.lang.reflect.Type;
 
+/**
+ * Custom JSON deserializer for quotes from Zenquotes API
+ */
 public class QuoteJsonDeserializer implements JsonDeserializer<Quote> {
     //https://docs.zenquotes.io/zenquotes-documentation/#response
     @Override

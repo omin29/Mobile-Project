@@ -2,7 +2,6 @@ package com.example.taskmanager.fragments;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -10,7 +9,6 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,20 +17,28 @@ import android.widget.Toast;
 import com.example.taskmanager.R;
 import com.example.taskmanager.task.Task;
 import com.example.taskmanager.task.TaskStatus;
-import com.example.taskmanager.utility.App;
 import com.example.taskmanager.utility.DatabaseHelper;
 
 import java.util.List;
 
 
+/**
+ * A fragment which shows the different kinds of tasks a list.
+ */
 @SuppressLint("NotifyDataSetChanged")
 public class TaskFragment extends Fragment {
 
     private static final String ARG_COLUMN_COUNT = "column-count";
     private static final String ARG_TASK_FILTER = "task-filter";
     private int mColumnCount = 1;
+    /**
+     * Used for filtering the shown tasks.
+     */
     private TaskStatus mTaskFilter = null;
 
+    /**
+     * Used for refreshing the task list.
+     */
     private MyTaskRecyclerViewAdapter adapter = null;
 
     /**
@@ -42,6 +48,10 @@ public class TaskFragment extends Fragment {
     public TaskFragment() {
     }
 
+    /**
+     * The constructor which specifies the status of the shown tasks in the list.
+     * @param taskStatus The task status used for filtering
+     */
     public TaskFragment(TaskStatus taskStatus) {
         this();
         this.mTaskFilter = taskStatus;
@@ -57,6 +67,9 @@ public class TaskFragment extends Fragment {
         return fragment;
     }
 
+    /**
+     * Refreshes the task list when the user resumes working with the fragment.
+     */
     @Override
     public void onResume() {
         super.onResume();
@@ -73,6 +86,7 @@ public class TaskFragment extends Fragment {
         }
     }
 
+    //This is the place where the task list fragment layout is prepared for usage
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -88,35 +102,28 @@ public class TaskFragment extends Fragment {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
 
-            DatabaseHelper _db = null;
-            try {
-                _db = new DatabaseHelper(context);
+            try (DatabaseHelper _db = new DatabaseHelper(context)) {
                 recyclerView.setAdapter(new MyTaskRecyclerViewAdapter(_db, mTaskFilter));
 
-                if(recyclerView.getAdapter() != null) {
-                    adapter = (MyTaskRecyclerViewAdapter)recyclerView.getAdapter();
+                if (recyclerView.getAdapter() != null) {
+                    adapter = (MyTaskRecyclerViewAdapter) recyclerView.getAdapter();
                 }
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 Toast.makeText(context, getResources().getString(R.string.tasks_load_failure_message),
                         Toast.LENGTH_LONG).show();
-            }
-            finally {
-                if(_db != null){
-                    _db.close();
-                    _db = null;
-                }
             }
         }
         return view;
     }
 
+    /**
+     * Refreshes the tasks in the current filtered list by using the recycler
+     * view adapter.
+     */
     private void refreshTabList() {
         if (adapter != null) {
-            DatabaseHelper _db = null;
-            try {
-                _db = new DatabaseHelper(getContext());
-                List<Task> tasks = adapter.getmValues();
+            try (DatabaseHelper _db = new DatabaseHelper(getContext())) {
+                List<Task> tasks = adapter.getValues();
                 List<Task> currentTasks = _db.selectTasks(mTaskFilter);
                 tasks.clear();
                 tasks.addAll(currentTasks);
@@ -124,11 +131,6 @@ public class TaskFragment extends Fragment {
             } catch (Exception e) {
                 Toast.makeText(getContext(), getResources().getString(R.string.tasks_load_failure_message),
                         Toast.LENGTH_LONG).show();
-            } finally {
-                if (_db != null) {
-                    _db.close();
-                    _db = null;
-                }
             }
         }
     }

@@ -30,17 +30,23 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * This utility class helps with the data manipulation of the task list items.
+ */
 @SuppressLint("NotifyDataSetChanged")
 public class MyTaskRecyclerViewAdapter extends RecyclerView.Adapter<MyTaskRecyclerViewAdapter.ViewHolder> {
     private final List<Task> mValues;
-    private TaskStatus taskListType;
+    /**
+     * Used for determining the layout and functionalities of each task list item
+     */
+    private final TaskStatus taskListType;
 
-    public MyTaskRecyclerViewAdapter(@NonNull DatabaseHelper _db, @NonNull TaskStatus taskListType) throws Exception {
+    public MyTaskRecyclerViewAdapter(@NonNull DatabaseHelper _db, @NonNull TaskStatus taskListType) {
         mValues = _db.selectTasks(taskListType);
         this.taskListType = taskListType;
     }
 
-    public List<Task> getmValues() {
+    public List<Task> getValues() {
         return mValues;
     }
 
@@ -52,6 +58,9 @@ public class MyTaskRecyclerViewAdapter extends RecyclerView.Adapter<MyTaskRecycl
 
     }
 
+    /*This place is very important because here we can modify the
+      task fragment views and add event listeners to these views (ex. onClickListeners).
+      These task fragments are reused to create the task list fragment layout.*/
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.task = mValues.get(position);
@@ -89,122 +98,100 @@ public class MyTaskRecyclerViewAdapter extends RecyclerView.Adapter<MyTaskRecycl
         if(taskListType.equals(TaskStatus.Finished)) {
             holder.completeTaskButton.setVisibility(View.GONE);
             holder.undoTaskCompletionButton.setVisibility(View.VISIBLE);
-            holder.undoTaskCompletionButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    DatabaseHelper _db = null;
-                    Context context = holder.undoTaskCompletionButton.getContext();
+            holder.undoTaskCompletionButton.setOnClickListener(view -> {
+                DatabaseHelper _db = null;
+                Context context = holder.undoTaskCompletionButton.getContext();
 
-                    try {
-                        holder.task.setStatus(TaskStatus.TODO);
-                        holder.task.reevaluateStatus();
-                        _db = new DatabaseHelper(context);
-                        _db.updateTask(holder.task);
-                        mValues.remove(holder.task);
-                        notifyDataSetChanged();
+                try {
+                    holder.task.setStatus(TaskStatus.TODO);
+                    holder.task.reevaluateStatus();
+                    _db = new DatabaseHelper(context);
+                    _db.updateTask(holder.task);
+                    mValues.remove(holder.task);
+                    notifyDataSetChanged();
 
-                        Toast.makeText(context,
-                                App.getContext().getResources().getString(R.string.task_undo_completion_success_message),
-                                Toast.LENGTH_LONG).show();
+                    Toast.makeText(context,
+                            App.getContext().getResources().getString(R.string.task_undo_completion_success_message),
+                            Toast.LENGTH_LONG).show();
 
-                    }
-                    catch (Exception e) {
-                        Toast.makeText(context, e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
-                    }
-                    finally {
-                        if (_db != null) {
-                            _db.close();
-                            _db = null;
-                        }
+                }
+                catch (Exception e) {
+                    Toast.makeText(context, e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+                }
+                finally {
+                    if (_db != null) {
+                        _db.close();
                     }
                 }
             });
         }
         else {
-            holder.completeTaskButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    DatabaseHelper _db = null;
-                    Context context = holder.completeTaskButton.getContext();
+            holder.completeTaskButton.setOnClickListener(view -> {
+                DatabaseHelper _db = null;
+                Context context = holder.completeTaskButton.getContext();
 
-                    try {
-                        holder.task.setStatus(TaskStatus.Finished);
-                        holder.task.setCompletedOn(LocalDateTime.now());
-                        _db = new DatabaseHelper(context);
-                        _db.updateTask(holder.task);
-                        mValues.remove(holder.task);
-                        notifyDataSetChanged();
+                try {
+                    holder.task.setStatus(TaskStatus.Finished);
+                    holder.task.setCompletedOn(LocalDateTime.now());
+                    _db = new DatabaseHelper(context);
+                    _db.updateTask(holder.task);
+                    mValues.remove(holder.task);
+                    notifyDataSetChanged();
 
-                        Toast.makeText(context,
-                                App.getContext().getResources().getString(R.string.task_complete_success_message),
-                                Toast.LENGTH_LONG).show();
-                    } catch (Exception e) {
-                        Toast.makeText(context, e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
-                    } finally {
-                        if (_db != null) {
-                            _db.close();
-                            _db = null;
-                        }
+                    Toast.makeText(context,
+                            App.getContext().getResources().getString(R.string.task_complete_success_message),
+                            Toast.LENGTH_LONG).show();
+                } catch (Exception e) {
+                    Toast.makeText(context, e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+                } finally {
+                    if (_db != null) {
+                        _db.close();
                     }
                 }
             });
         }
 
-        holder.deleteTaskButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(
-                        holder.deleteTaskButton.getContext());
-                builder.setCancelable(true);
-                builder.setTitle(App.getContext().getResources()
-                        .getString(R.string.task_delete_confirmation_title));
-                builder.setMessage(App.getContext().getResources()
-                        .getString(R.string.task_delete_confirmation_message));
-                builder.setPositiveButton(App.getContext().getResources()
-                                .getString(R.string.delete_alert_positive),
-                        (dialog, which) ->
-                        {
-                            DatabaseHelper _db = null;
-                            Context context = holder.deleteTaskButton.getContext();
+        holder.deleteTaskButton.setOnClickListener(view -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(
+                    holder.deleteTaskButton.getContext());
+            builder.setCancelable(true);
+            builder.setTitle(App.getContext().getResources()
+                    .getString(R.string.task_delete_confirmation_title));
+            builder.setMessage(App.getContext().getResources()
+                    .getString(R.string.task_delete_confirmation_message));
+            builder.setPositiveButton(App.getContext().getResources()
+                            .getString(R.string.delete_alert_positive),
+                    (dialog, which) ->
+                    {
 
-                            try {
-                                _db = new DatabaseHelper(context);
-                                _db.deleteTask(holder.task);
-                                mValues.remove(holder.task);
-                                notifyDataSetChanged();
+                        Context context = holder.deleteTaskButton.getContext();
+                        try (DatabaseHelper _db = new DatabaseHelper(context)) {
+                            _db.deleteTask(holder.task);
+                            mValues.remove(holder.task);
+                            notifyDataSetChanged();
 
-                                Toast.makeText(context,
-                                        String.format(App.getContext().getResources()
-                                                .getString(R.string.task_delete_success_message)),
-                                        Toast.LENGTH_LONG).show();
-                            }
-                            catch(Exception e) {
-                                Toast.makeText(context, e.getLocalizedMessage(),Toast.LENGTH_LONG).show();
-                            }
-                            finally {
-                                if(_db != null) {
-                                    _db.close();
-                                    _db = null;
-                                }
-                            }
-                        });
-                builder.setNegativeButton(android.R.string.cancel,
-                        (dialog, which) -> dialog.cancel());
+                            Toast.makeText(context,
+                                    String.format(App.getContext().getResources()
+                                            .getString(R.string.task_delete_success_message)),
+                                    Toast.LENGTH_LONG).show();
+                        } catch (Exception e) {
+                            Toast.makeText(context, e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    });
+            builder.setNegativeButton(android.R.string.cancel,
+                    (dialog, which) -> dialog.cancel());
 
-                AlertDialog dialog = builder.create();
-                dialog.show();
-            }
+            AlertDialog dialog = builder.create();
+            dialog.show();
         });
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Context context = holder.itemView.getContext();
-                Intent i = new Intent(context, SaveTaskActivity.class);
-                Bundle taskData = holder.task.getBundleData();
-                i.putExtras(taskData);
-                startActivity(context, i, null);
-            }
+        //Opens a task for editing/viewing details
+        holder.itemView.setOnClickListener(view -> {
+            Context context = holder.itemView.getContext();
+            Intent i = new Intent(context, SaveTaskActivity.class);
+            Bundle taskData = holder.task.getBundleData();
+            i.putExtras(taskData);
+            startActivity(context, i, null);
         });
     }
 
@@ -213,6 +200,13 @@ public class MyTaskRecyclerViewAdapter extends RecyclerView.Adapter<MyTaskRecycl
         return mValues.size();
     }
 
+
+    /**
+     * This utility class helps with the access
+     * to the views in the task item fragment. This is the fragment
+     * which is used multiple times in the task lists for each tab.
+     */
+    @SuppressLint("ViewHolder")
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final TextView taskTitle;
         public final TextView taskExpiresOn;
